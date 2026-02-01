@@ -1,0 +1,44 @@
+@font-face{
+  font-family: Fredoka;
+  src: url("/fredoka-one/FredokaOne-Regular.otf") format("opentype");
+  font-weight: normal;
+  font-style: normal;
+}
+
+@import "tailwindcss";
+
+@theme{
+  --font-fredoka: "Fredoka", sans-serif;
+}
+
+:root {
+  --background: #ffffff;
+  --foreground: #171717;
+}
+
+/* @theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+} */
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --background: #0a0a0a;
+    --foreground: #ededed;
+  }
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-fredoka);
+}
+
+.text-glow {
+  text-shadow: 
+  0 0 5px #7c5ecb, 
+  0 0 10px #000000, 
+  0 0 20px #000000;
+}
