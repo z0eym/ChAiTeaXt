@@ -6,7 +6,7 @@ export default function Home() {
     <div className="flex flex-col min-h-screen w-full bg-[url('/PurpleOmbreBG.png')] bg-cover bg-center bg-no-repeat"> 
     
     {/* Navigation Header */}
-    <nav className="z-50 absolute top-5 left-5 right-5 flex items-center justify-between bg-black px-10 py-4 rounded-full text-zinc-200 shadow-xl">
+    <nav className="z-50 absolute top-5 left-5 right-5 flex items-center justify-between bg-black/70 px-10 py-4 rounded-full text-zinc-200 shadow-xl">
   
       {/* Nav Links */}
       <div className="flex items-center gap-20">
@@ -31,8 +31,8 @@ export default function Home() {
       <h1 className="font-fredoka text-5xl font-bold leading-tight mt-6 tracking-[10px]"> For All Your Technical </h1>
       <h1 className="font-fredoka text-5xl font-bold leading-tight tracking-[10px]"> Support  Needs </h1>
 
-      <Link className="gap-4 mt-6 text-2xl text-white flex h-16 items-center justify-center rounded-full bg-black transition-colors hover:bg-[#5e17eb] dark:hover:bg-[#ae97e7] md:w-[158px]"
-        href="/aichat" // Add in AI chatbox link page/application
+      <Link className="gap-4 mt-6 text-2xl text-white flex h-16 items-center justify-center rounded-full bg-black/70 transition-colors hover:bg-[#5e17eb] dark:hover:bg-[#ae97e7] md:w-[158px]"
+        href="/components" // Add in AI chatbox link page/application
         target="_blank"
         rel="noopener noreferrer"> Start Now
       </Link>
@@ -50,7 +50,7 @@ export default function Home() {
 
       {/* Copyright */}
       <div className="mt-8 text-center text-zinc-400 text-sm">
-        &copy; {new Date().getFullYear()} ChAi TeaXt. All rights reserved.
+        &copy; {new Date().getFullYear()} ChAi TeaXt AI Help Desk System. All rights reserved.
       </div>
     </footer>
     </div>
