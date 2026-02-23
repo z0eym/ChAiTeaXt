@@ -1,24 +1,94 @@
+"use client";
 import React from "react";
 import Link from "next/link";
+import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
+
+type User = {
+  UserID: number;
+  UserName: string;
+  UserEmail: string;
+};
 
 export default function ErrolPortfolio() {
+  const router = useRouter();
+  const [user, setUser] = useState<User | null>(null);
+  const [previousChats, setPreviousChats] = useState<any[]>([]);
+
+  useEffect(() => {
+    const loggedInUser = localStorage.getItem("user");
+    if (loggedInUser) {
+      setUser(JSON.parse(loggedInUser));
+    } else {
+      router.push("/errol");
+    }
+  }, [router]);
+
+  const startNewChat = () => {
+    const ticketId = `chat_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+    
+    const chatSession = {
+      ticketId,
+      startedAt: new Date().toISOString(),
+      userId: user?.UserID,
+      userName: user?.UserName,
+      userEmail: user?.UserEmail,
+      isLoggedInUser: true
+    };
+    
+    localStorage.setItem('chatSession', JSON.stringify(chatSession));
+    router.push(`/chat/${ticketId}`);
+  };
+
+  const handleLogout = () => {
+    localStorage.removeItem("user");
+    localStorage.removeItem("chatSession");
+    router.push("/");
+  };
+
   return (
     <div className="flex flex-col min-h-screen w-full bg-[url('/PurpleOmbreBG.png')] bg-cover bg-center bg-no-repeat">
 
       {/* Navigation Header */}
       <nav className="z-50 absolute top-5 left-5 right-5 flex items-center justify-between bg-black/70 px-10 py-4 rounded-full text-zinc-200 shadow-xl">
         <div className="flex items-center gap-20">
-          <Link href="/" className="hover:text-[#ae97e7] text-2xl">
+          <Link 
+            href={user ? "/dashboard" : "/"} 
+            className="hover:text-[#ae97e7] font-bold text-2xl">
             ChAi TeaXt
           </Link>
+
           <div className="flex gap-10 text-2xl">
             <Link href="/about" className="hover:text-[#ae97e7]">About</Link>
             <Link href="/developers" className="hover:text-[#ae97e7] text-[#ae97e7]">Developers</Link>
             <Link href="/help" className="hover:text-[#ae97e7]">Help</Link>
           </div>
         </div>
-        <Link href="/login" className="text-2xl hover:text-[#ae97e7]">Log In</Link>
-      </nav>
+
+        <div className="flex items-center gap-6">
+          {user ? (
+            <>
+              <Link 
+                href="/user-profile" 
+                className="text-2xl text-zinc-300 hover:text-[#ae97e7]">
+                {user?.UserName}
+              </Link>
+              <button 
+                onClick={handleLogout}
+                className="cursor-pointer text-lg bg-red-400 hover:bg-red-700  px-4 py-2 rounded-full transition-colors">
+                Logout
+              </button>
+            </>
+          ) : (
+            <>
+              <div className="flex items-center gap-4">
+                <Link href="/login" className="text-2xl bg-[#ae97e7] hover:bg-[#5e17eb] px-4 py-2 rounded-full transition-colors">Log In</Link>
+                <Link href="/signup" className="text-2xl bg-[#ae97e7] hover:bg-[#5e17eb] px-4 py-2 rounded-full transition-colors">Sign Up</Link>
+              </div>
+            </>
+          )}
+        </div>
+      </nav> 
 
       <div className="flex-1 pt-32 px-10 pb-16 text-zinc-200">
         <header className="text-center mb-16">
@@ -30,7 +100,7 @@ export default function ErrolPortfolio() {
 
         {/* About Me */}
         <InfoCard title="About Me">
-          Hello, my name is Errol Luna. I am an undergraduate student in the IT
+          Hello, my name is Errol Melvyn Luna. I am an undergraduate student in the IT
           program at the University of Washington.
         </InfoCard>
 
@@ -46,9 +116,8 @@ export default function ErrolPortfolio() {
             </thead>
             <tbody>
               {[
-               // THIS IS ZOEY's SKILLS, NOT ERROL's. PLEASE UPDATE WITH ERROLS'S SKILLS
-                ["Java", "Basic", "2 Years"],
-                ["HTML", "Basic", "1 Year"],
+                ["Java", "Basic", "1 Year"],
+                ["HTML", "Basic", "2 Years"],
                 ["C#", "Basic", "6 Months"],
                 ["PowerPoint", "Proficient", "6 Years"],
                 ["MS Project", "Proficient", "1 Year"],
@@ -68,15 +137,22 @@ export default function ErrolPortfolio() {
         <InfoCard title="Projects">
           <ol className="list-decimal pl-6 space-y-2">
             <li>
-              <p>AJRMedia Website</p> - Car photography website built with a
-              team of 4, using Wix. Served as Project Manager.
+              <p>
+                <Link href="https://lilybuif.github.io/AYSAKentAcademyWebsite/aboutus.html" className="hover:text-[#ae97e7]">
+                  AYSA Kent Website
+                </Link>
+              </p>
+              Apr 2025 – May 2025 <br />
+              Part of a team called the Kickstart Crew where we made a clean and functional website for AYSA Kent to help them with registration and donations.
             </li>
             <li>
-              <p>Personal Portfolio</p> - The portfolio you are viewing right now! Built using HTML and converted
-              into Next.js.
-            </li>
-            <li>
-              <Link href="https://www.affluproductions.com/" className="cursor pointer hover:text-[#ae97e7]">Affluent Productions Website</Link> - A website to promote discord activites, thus earning revenue for game developer
+              <p>
+                <Link href="https://joshsimp-uw.github.io/SeattleSports/index.html" className="hover:text-[#ae97e7]">
+                  Seattle Sports Web Page
+                </Link>
+              </p>
+              Jan 2025 – Mar 2025 <br />
+              Worked with a team of 4 to design a web page for our web development class.
             </li>
           </ol>
         </InfoCard>
@@ -85,24 +161,18 @@ export default function ErrolPortfolio() {
         <InfoCard title="Contacts">
           <ul className="Contacts">
             <li>
-               {/* EDIT "mailto:" */}
-              <p>Email: <a href="mailto:z0eyvm@gmail.com ?subject=Inquiry&body=" className="underline hover:text-[#ae97e7]">
-               {/* EDIT THIS PLEASE. */}
-                z0eyvmiller@gmail.com</a></p></li> 
-
-            <li>
-              <p>GitHub: <a href="" target="_blank" className="underline hover:text-[#ae97e7]">
-              {/* EDIT PLS */}
-                github.z0eyvm
-              </a></p>{" "}
-              
+              <p>Email: <a href="mailto:elunasy02@gmail.com" className="underline hover:text-[#ae97e7]">
+                elunasy02@gmail.com</a></p>
             </li>
             <li>
-               {/* !!!!!!!!!!!!!!! edit */}
-              <p>LinkedIn: <a href="" target="_blank" className="underline hover:text-[#ae97e7]">
-               {/* EDIT PLEASE */}
-                {/* linkedin.zoeymiller */}
-              </a></p>{" "}
+              <p>GitHub: <a href="https://github.com/JunkMoon" target="_blank" className="underline hover:text-[#ae97e7]">
+                github.com/JunkMoon
+              </a></p>
+            </li>
+            <li>
+              <p>LinkedIn: <a href="https://www.linkedin.com/in/errol-melvyn-luna-30524b207/" target="_blank" className="underline hover:text-[#ae97e7]">
+                linkedin.com/in/errol-melvyn-luna-30524b207
+              </a></p>
             </li>
           </ul>
         </InfoCard>

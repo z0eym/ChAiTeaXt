@@ -48,6 +48,7 @@ const Login = () => {
             <Link href="/help" className="hover:text-[#ae97e7] cursor-pointer">Help</Link>
           </div>
         </div>
+          <Link href="/signup" className="text-2xl bg-[#ae97e7] hover:bg-[#5e17eb] px-4 py-2 rounded-full transition-colors">Sign Up</Link>
       </nav>
       
       {/* Login Form */}

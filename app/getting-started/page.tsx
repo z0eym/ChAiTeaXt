@@ -1,22 +1,94 @@
+"use client";
 import Link from "next/link";
+import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
+
+type User = {
+  UserID: number;
+  UserName: string;
+  UserEmail: string;
+};
 
 export default function GettingStartedPage() {
+  const router = useRouter();
+  const [user, setUser] = useState<User | null>(null);
+  const [previousChats, setPreviousChats] = useState<any[]>([]);
+
+  useEffect(() => {
+    const loggedInUser = localStorage.getItem("user");
+    if (loggedInUser) {
+      setUser(JSON.parse(loggedInUser));
+    } else {
+      router.push("/getting-started");
+    }
+  }, [router]);
+
+  const startNewChat = () => {
+    const ticketId = `chat_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+    
+    const chatSession = {
+      ticketId,
+      startedAt: new Date().toISOString(),
+      userId: user?.UserID,
+      userName: user?.UserName,
+      userEmail: user?.UserEmail,
+      isLoggedInUser: true
+    };
+    
+    localStorage.setItem('chatSession', JSON.stringify(chatSession));
+    router.push(`/chat/${ticketId}`);
+  };
+
+  const handleLogout = () => {
+    localStorage.removeItem("user");
+    localStorage.removeItem("chatSession");
+    router.push("/");
+  };
+
   return (
     <div className="flex flex-col min-h-screen w-full bg-[url('/PurpleOmbreBG.png')] bg-cover bg-center bg-no-repeat">
+
+      {/* Navigation Header */}
       <nav className="z-50 absolute top-5 left-5 right-5 flex items-center justify-between bg-black/70 px-10 py-4 rounded-full text-zinc-200 shadow-xl">
         <div className="flex items-center gap-20">
-          <Link href="/" className="hover:text-[#ae97e7] text-2xl">ChAi TeaXt</Link> 
+          <Link 
+            href={user ? "/dashboard" : "/"} 
+            className="hover:text-[#ae97e7] font-bold text-2xl">
+            ChAi TeaXt
+          </Link>
+
           <div className="flex gap-10 text-2xl">
             <Link href="/about" className="hover:text-[#ae97e7]">About</Link>
             <Link href="/developers" className="hover:text-[#ae97e7]">Developers</Link>
             <Link href="/help" className="hover:text-[#ae97e7] text-[#ae97e7]">Help</Link>
           </div>
         </div>
-        <div className="flex items-center">
-          <Link href="/login" className="text-2xl hover:text-[#ae97e7]">Log In</Link> 
-        </div>
-      </nav>
 
+        <div className="flex items-center gap-6">
+          {user ? (
+            <>
+              <Link 
+                href="/user-profile" 
+                className="text-2xl text-zinc-300 hover:text-[#ae97e7]">
+                {user?.UserName}
+              </Link>
+              <button 
+                onClick={handleLogout}
+                className="cursor-pointer text-lg bg-red-400 hover:bg-red-700  px-4 py-2 rounded-full transition-colors">
+                Logout
+              </button>
+            </>
+          ) : (
+            <>
+              <div className="flex items-center gap-4">
+                <Link href="/login" className="text-2xl bg-[#ae97e7] hover:bg-[#5e17eb] px-4 py-2 rounded-full transition-colors">Log In</Link>
+                <Link href="/signup" className="text-2xl bg-[#ae97e7] hover:bg-[#5e17eb] px-4 py-2 rounded-full transition-colors">Sign Up</Link>
+              </div>
+            </>
+          )}
+        </div>
+      </nav> 
+ 
       <div className="flex-1 flex flex-col items-center justify-start pt-32 px-6 pb-12">
         <div className="w-full max-w-4xl">
           <div className="mb-8">
